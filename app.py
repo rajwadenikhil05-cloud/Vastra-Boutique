@@ -15,8 +15,8 @@ genai.configure(api_key=GOOGLE_KEY)
 ai_model = genai.GenerativeModel('gemini-1.5-flash-latest')
 conn = st.connection("supabase", 
                      type=SupabaseConnection, 
-                     url=https://pzozsuvtdtdnooqutrgp.supabase.co, 
-                     key=sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C)
+                     url=SUPABASE_URL, 
+                     key=SUPABASE_KEY)
 # --- 2. SIDEBAR ---
 with st.sidebar:
     st.title("VASTRA")
