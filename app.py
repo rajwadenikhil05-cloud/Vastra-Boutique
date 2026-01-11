@@ -4,19 +4,20 @@ import google.generativeai as genai
 from gradio_client import Client
 from st_supabase_connection import SupabaseConnection
 
-# --- 1. BOUTIQUE UI CONFIG ---
-st.set_page_config(page_title="Vastra by NV", layout="wide")
+# --- 1. SECURE CONFIG ---
+# Use the NAMES from your Secrets tab, not the actual values!
+GOOGLE_KEY = st.secrets["AIzaSyD-H7Q_tUo5EXaQsNB5286iSH1rKuiy6fs"]
+HF_TOKEN = st.secrets["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"]
+SUPABASE_URL = st.secrets["https://pzozsuvtdtdnooqutrgp.supabase.co"]
+SUPABASE_KEY = st.secrets["sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C"]
 
-# (Replace with your actual keys)
-URL = "https://pzozsuvtdtdnooqutrgp.supabase.co"
-KEY = "sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C"
-GOOGLE_KEY = "AIzaSyD-H7Q_tUo5EXaQsNB5286iSH1rKuiy6fs"
-HF_TOKEN = "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"
-
-# Connections
+# Initialize AI & DB
 genai.configure(api_key=GOOGLE_KEY)
-ai_model = genai.GenerativeModel('gemini-1.5-flash')
-conn = st.connection("supabase", type=SupabaseConnection, url=URL, key=KEY)
+ai_model = genai.GenerativeModel('gemini-1.5-flash-latest')
+conn = st.connection("supabase", 
+                     type=SupabaseConnection, 
+                     url=SUPABASE_URL, 
+                     key=SUPABASE_KEY)
 
 # --- 2. THE PREMIUM INTERFACE (CRED Style) ---
 st.markdown("""
@@ -79,4 +80,5 @@ elif menu == "🎨 AI Stylist":
     if st.button("Generate AI Shoot"):
         client = Client("yisol/IDM-VTON", hf_token=HF_TOKEN)
         result = client.predict(person, cloth, "Try this", api_name="/predict")
+
         st.image(result)
