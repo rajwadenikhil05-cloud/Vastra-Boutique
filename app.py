@@ -5,10 +5,10 @@ from gradio_client import Client
 from st_supabase_connection import SupabaseConnection
 
 # --- 1. SECURE CONFIG ---
-GOOGLE_KEY = st.secrets["AIzaSyD-H7Q_tUo5EXaQsNB5286iSH1rKuiy6fs"]
-HF_TOKEN = st.secrets["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"]
-SUPABASE_URL = st.secrets["https://pzozsuvtdtdnooqutrgp.supabase.co"]
-SUPABASE_KEY = st.secrets["sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C"]
+GOOGLE_KEY = ["AIzaSyD-H7Q_tUo5EXaQsNB5286iSH1rKuiy6fs"]
+HF_TOKEN = ["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"]
+SUPABASE_URL = ["https://pzozsuvtdtdnooqutrgp.supabase.co"]
+SUPABASE_KEY = ["sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C"]
 
 # Initialize AI & DB
 genai.configure(api_key=GOOGLE_KEY)
@@ -52,6 +52,7 @@ elif menu == "🎨 AI Stylist":
             result = client.predict(person, cloth, "Try this", api_name="/predict")
 
             st.image(result[0])
+
 
 
 
