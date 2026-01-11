@@ -15,8 +15,8 @@ genai.configure(api_key=GOOGLE_KEY)
 ai_model = genai.GenerativeModel('gemini-1.5-flash-latest')
 conn = st.connection("supabase", 
                      type=SupabaseConnection, 
-                     url=SUPABASE_URL, 
-                     key=SUPABASE_KEY)
+                     url=https://pzozsuvtdtdnooqutrgp.supabase.co, 
+                     key=sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C)
 # --- 2. SIDEBAR ---
 with st.sidebar:
     st.title("VASTRA")
@@ -52,5 +52,6 @@ elif menu == "🎨 AI Stylist":
             result = client.predict(person, cloth, "Try this", api_name="/predict")
 
             st.image(result[0])
+
 
 
