@@ -16,7 +16,7 @@ st.set_page_config(
 # --------------------------------------------------
 # 2. LOAD SECRETS SAFELY
 # --------------------------------------------------
-GOOGLE_KEY = st.secrets.get("AIzaSyD-H7Q_tUo5EXaQsNB5286iSH1rKuiy6fs")
+GOOGLE_KEY = st.secrets.get("AIzaSyDjyEStNmeRqveZsP7WdAEIbk3nZntrLdc")
 HF_TOKEN = st.secrets.get("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")
 SUPABASE_URL = st.secrets.get("https://pzozsuvtdtdnooqutrgp.supabase.co")
 SUPABASE_KEY = st.secrets.get("sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C")
@@ -140,3 +140,4 @@ elif menu == "🎨 AI Stylist":
             except Exception as e:
                 st.error("AI Try-On failed")
                 st.exception(e)
+
