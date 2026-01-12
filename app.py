@@ -8,10 +8,12 @@ from st_supabase_connection import SupabaseConnection
 st.set_page_config(page_title="Vastra by NV", layout="wide")
 
 # We use the LABELS from Step 1
-GOOGLE_KEY = st.secrets["AIzaSyDjyEStNmeRqveZsP7WdAEIbk3nZntrLdc"]
-HF_TOKEN = st.secrets["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"]
-SUPABASE_URL = st.secrets["https://pzozsuvtdtdnooqutrgp.supabase.co"]
-SUPABASE_KEY = st.secrets["sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C"]
+st.secrets = {
+  "GOOGLE_API_KEY": "AIzaSyD-H7Q_tUo5EXaQsNB5286iSH1rKuiy6fs",
+  "HF_TOKEN": "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",
+  "SUPABASE_URL": "https://pzozsuvtdtdnooqutrgp.supabase.co",
+  "SUPABASE_ANON_KEY": "sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C"
+}
 
 # Initialize AI & DB
 genai.configure(api_key=GOOGLE_KEY)
@@ -53,4 +55,5 @@ elif menu == "🎨 AI Stylist":
         client = Client("yisol/IDM-VTON", hf_token=HF_TOKEN)
         result = client.predict(person, cloth, "Try this", api_name="/predict")
         st.image(result[0])
+
 
