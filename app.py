@@ -14,26 +14,26 @@ st.set_page_config(
 )
 
 # --------------------------------------------------
-# 2. LOAD SECRETS SAFELY
+# 2. LOAD SECRETS (ONLY SHORT KEYS)
 # --------------------------------------------------
-GOOGLE_KEY = st.secrets.get("AIzaSyDjyEStNmeRqveZsP7WdAEIbk3nZntrLdc")
+GOOGLE_API_KEY = st.secrets.get("AIzaSyDjyEStNmeRqveZsP7WdAEIbk3nZntrLdc")
 HF_TOKEN = st.secrets.get("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")
-SUPABASE_URL = st.secrets.get("https://pzozsuvtdtdnooqutrgp.supabase.co")
-SUPABASE_KEY = st.secrets.get("sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C")
 
-if not GOOGLE_KEY:
-    st.error("❌ Google API Key missing in Streamlit Secrets")
-    st.stop()
-
-if not SUPABASE_URL or not SUPABASE_KEY:
-    st.error("❌ Supabase credentials missing in Streamlit Secrets")
+if not GOOGLE_API_KEY:
+    st.error("❌ Google API Key missing")
     st.stop()
 
 # --------------------------------------------------
-# 3. INITIALIZE SERVICES
+# 3. SUPABASE (PUBLIC – SAFE TO HARDCODE)
+# --------------------------------------------------
+SUPABASE_URL = "https://pzozsuvtdtdnooqutrgp.supabase.co"
+SUPABASE_ANON_KEY = "sb_publishable_Sbm1g1dCi3qGNs_uzxAroQ_-_od4t9C"
+
+# --------------------------------------------------
+# 4. INITIALIZE SERVICES
 # --------------------------------------------------
 # Gemini
-genai.configure(api_key=GOOGLE_KEY)
+genai.configure(api_key=GOOGLE_API_KEY)
 ai_model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Supabase
@@ -41,11 +41,11 @@ conn = st.connection(
     "supabase",
     type=SupabaseConnection,
     url=SUPABASE_URL,
-    key=SUPABASE_KEY
+    key=SUPABASE_ANON_KEY
 )
 
 # --------------------------------------------------
-# 4. SIDEBAR
+# 5. SIDEBAR
 # --------------------------------------------------
 with st.sidebar:
     st.title("🧵 VASTRA")
@@ -57,7 +57,7 @@ with st.sidebar:
     )
 
 # --------------------------------------------------
-# 5. DASHBOARD
+# 6. DASHBOARD
 # --------------------------------------------------
 if menu == "📊 Dashboard":
     st.title("📊 Vastra Business Pulse")
@@ -71,27 +71,23 @@ if menu == "📊 Dashboard":
     st.line_chart(pd.DataFrame({"Sales": [10, 25, 15, 45, 30, 60, 40]}))
 
 # --------------------------------------------------
-# 6. FINANCE & AI
+# 7. FINANCE & AI
 # --------------------------------------------------
 elif menu == "🧾 Finance & AI":
     st.title("🧠 AI Business Advisor")
 
     prompt = st.text_area(
-        "Ask AI about your business",
-        "Give me 3 marketing ideas to increase boutique sales"
+        "Ask AI about your boutique",
+        "Give me 3 ideas to increase sales for a local clothing store"
     )
 
     if st.button("Generate AI Insight"):
-        with st.spinner("Gemini is analyzing your business..."):
-            try:
-                response = ai_model.generate_content(prompt)
-                st.success(response.text)
-            except Exception as e:
-                st.error("AI generation failed")
-                st.exception(e)
+        with st.spinner("Gemini is thinking..."):
+            response = ai_model.generate_content(prompt)
+            st.success(response.text)
 
 # --------------------------------------------------
-# 7. INVENTORY
+# 8. INVENTORY
 # --------------------------------------------------
 elif menu == "📦 Inventory":
     st.title("📦 Digital Inventory")
@@ -106,38 +102,28 @@ elif menu == "📦 Inventory":
             st.dataframe(df, use_container_width=True)
 
     except Exception as e:
-        st.error("Could not fetch inventory data")
-        st.exception(e)
+        st.error("Inventory table not found or Supabase not connected")
 
 # --------------------------------------------------
-# 8. AI STYLIST (OPTIONAL / ADVANCED)
+# 9. AI STYLIST (OPTIONAL)
 # --------------------------------------------------
 elif menu == "🎨 AI Stylist":
-    st.title("🎨 AI Virtual Try-On (Experimental)")
+    st.title("🎨 AI Virtual Try-On")
 
     if not HF_TOKEN:
-        st.warning("Hugging Face token not configured")
+        st.warning("Hugging Face token missing")
         st.stop()
 
-    cloth = st.file_uploader("Upload Cloth Image", type=["png", "jpg"])
-    person = st.file_uploader("Upload Person Image", type=["png", "jpg"])
+    cloth = st.file_uploader("Upload Cloth Image", type=["jpg", "png"])
+    person = st.file_uploader("Upload Person Image", type=["jpg", "png"])
 
-    if cloth and person and st.button("Generate AI Try-On"):
+    if cloth and person and st.button("Generate Try-On"):
         with st.spinner("Generating AI try-on..."):
-            try:
-                client = Client(
-                    "yisol/IDM-VTON",
-                    hf_token=HF_TOKEN
-                )
-                result = client.predict(
-                    person,
-                    cloth,
-                    "Virtual try on",
-                    api_name="/predict"
-                )
-                st.image(result[0], caption="AI Generated Look")
-
-            except Exception as e:
-                st.error("AI Try-On failed")
-                st.exception(e)
-
+            client = Client("yisol/IDM-VTON", hf_token=HF_TOKEN)
+            result = client.predict(
+                person,
+                cloth,
+                "Virtual try on",
+                api_name="/predict"
+            )
+            st.image(result[0], caption="AI Generated Look")
